@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, Pressable, Alert } from 'react-native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Loading from '../components/Loading';
+import CustomKeyBoardView from '../components/CustomKeyBoardView';
 
 export default function SignIn() {
   const router = useRouter();
@@ -20,9 +21,14 @@ export default function SignIn() {
     }
     // login process 
   }
+
+  const handleGoToSignUp = async () => {
+    // alert("adasdf")
+    router.push("signUp")
+  }
  
   return (
-    <View className="flex-1"> 
+    <CustomKeyBoardView>
       <StatusBar style="dark" />
       <View className="flex-1 gap-12" style={{paddingTop: hp(8), paddingHorizontal: wp(8)}}>  
         <View className="items-center">
@@ -34,7 +40,7 @@ export default function SignIn() {
             <View style={{height:hp(7)}} className="flex-row px-4 bg-neutral-100 items-center rounded-2xl">
               <Octicons name="mail" color={"gray"} size={hp(2.7)} />
               <TextInput
-                onChange={()=>emailRef.current=value}
+                onChange={(value)=>emailRef.current=value}
                 style={{fontSize: hp(2), marginLeft: 5}}
                 className="flex-1 font-semibold text-neutral-700"
                 placeholder="Enter Email"
@@ -44,7 +50,7 @@ export default function SignIn() {
             <View style={{height:hp(7)}} className="flex-row px-4 bg-neutral-100 items-center rounded-2xl">
               <Octicons name="lock" color={"gray"} size={hp(2.7)} />
               <TextInput
-                onChange={()=>passwordRef.current=value}
+                onChange={(value)=>passwordRef.current=value}
                 style={{fontSize: hp(2), marginLeft: 5}}
                 className="flex-1 font-semibold text-neutral-700"
                 placeholder="Enter Password"
@@ -68,13 +74,13 @@ export default function SignIn() {
             </View>
             <View className="flex-row justify-center">
               <Text style={{fontSize: hp(1.8)}} className="font-semibold text-neutral-500">Don't have an account </Text>
-              <Pressable>
+              <Pressable onPress={handleGoToSignUp}>
                 <Text style={{fontSize: hp(1.8)}} className="font-bold text-indigo-500">Sign Up</Text>
               </Pressable>
             </View>
           </View>
         </View> 
       </View>
-    </View>
+    </CustomKeyBoardView>
   )
 }
