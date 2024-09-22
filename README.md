@@ -48,3 +48,12 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+<!-- create app on firebase -->
+<!-- then copy config file and create firebase file and paste it on config file -->
+<!-- go to authentication section and click get start button -->
+<!-- choose email and password provider then enable and save it -->
+<!-- and go to all products and choose cloud firestore to use database  -->
+<!-- ::::::::::: create database by following this steps -->
+<!-- choose location (nearest from you) -->
+<!-- choose mode (start in test mode) and then click create -->

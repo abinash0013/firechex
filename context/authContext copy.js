@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChange, createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import { auth } from "./../firebase.config";
+import { onAuthStateChange, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase.config";
 import { doc, getDoc, setDoc} from 'firebase/firestore';
 
 export const AuthContext = createContext();
@@ -9,16 +9,19 @@ export const AuthContextProvider = ({children})=>{
   const [user, setUser] = useState("")
   const [isAuthenticated, setIsAuthenticated] = useState(undefined)
 
-  useEffect(()=>{     
-    const unSub = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setIsAuthenticated(true);
-        setUser(user);
+  useEffect(()=>{    
+    // setTimeout(()=>{
+    //   setIsAuthenticated(true)
+    // },3000)
+    const unSub = onAuthStateChange(auth, (user)=>{
+      if(user){
+        setIsAuthenticated(true)
+        setUser(user)
       } else {
-        setIsAuthenticated(false);
-        setUser(null);
+        setIsAuthenticated(false)
+        setUser(null)
       }
-    });  
+    });
     return unSub;
   }, [])
 
@@ -38,7 +41,7 @@ export const AuthContextProvider = ({children})=>{
   }
   const register = async (email, password, profileUrl) => {
     try {
-      const response = await createUserWithEmailAndPassword(auth, email, password);
+      const response = await createUserWithEmailAndPassword(auth, email, password)      ;
       console.log("responseLog______________", response?.user);
       await setDoc(doc(db, "users", response?.user?.uid),{
         username,
@@ -47,11 +50,7 @@ export const AuthContextProvider = ({children})=>{
       });
       return {success: true, data: response?.user}
     } catch (error) {
-      console.log("Firebase Error:", error);  // Log the entire error object
-      let msg = error.message;
-      if (msg.includes('(auth/invalid-email)')) msg = 'Invalid email';
-      else if (msg.includes('(auth/network-request-failed)')) msg = 'Network request failed. Please check your connection.';
-      return { success: false, msg };   
+      return {success: false, msg: e.message}      
     }
   }
 

@@ -6,10 +6,12 @@ import { View, Text, Image, TextInput, TouchableOpacity, Pressable, Alert } from
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Loading from '../components/Loading';
 import CustomKeyBoardView from '../components/CustomKeyBoardView';
+import { useAuth } from '../context/authContext';
 
 export default function SignUp() {
   const router = useRouter();
-  
+  const {register} = useAuth();
+
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const usernameRef = useRef("");
@@ -17,12 +19,29 @@ export default function SignUp() {
 
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async () => {
-    if(!emailRef.current || !passwordRef.current || !usernameRef.current || !profileRef.current){
-      Alert.alert("Sign Up", "Please fill all the fields")
+  const handleRegister = async () => {      
+    // if(!emailRef.current || !passwordRef.current || !usernameRef.current || !profileRef.current){
+    if(!emailRef.current){
+      Alert.alert("Warning", "Please fill Email fields")
       return;
+    } else if(!passwordRef.current){
+      Alert.alert("Warning", "Please fill Password fields")
+      return;
+    } else if(!usernameRef.current){
+      Alert.alert("Warning", "Please fill Username fields")
+      return;
+    } else if(!profileRef.current){
+      Alert.alert("Warning", "Please fill Profile fields")
+      return;
+    } else {
+      setLoading(true);
+      let response = await register(emailRef.current, passwordRef.current, usernameRef.current, profileRef.current)
+      setLoading(false);
+      console.log("responseLogLog", response);     
+      if(!response.success){
+        Alert.alert("Signup", response.msg)
+      }
     }
-    // login process 
   }
 
   const handleGoToSignIn = async () => {
@@ -73,7 +92,7 @@ export default function SignUp() {
             <View style={{height:hp(7)}} className="flex-row px-4 bg-neutral-100 items-center rounded-2xl">
               <Feather name="image" color={"gray"} size={hp(2.7)} />
               <TextInput
-                onChange={(value)=>emailRef.current=value}
+                onChange={(value)=>profileRef.current=value}
                 style={{fontSize: hp(2), marginLeft: 5}}
                 className="flex-1 font-semibold text-neutral-700"
                 placeholder="Profile Url"
@@ -89,14 +108,14 @@ export default function SignUp() {
                 </View>
               ) : (
                 <TouchableOpacity onPress={handleRegister} style={{height: hp(6.5)}} className="bg-indigo-500 rounded-xl justify-center items-center">
-                  <Text style={{fontSize: hp(2.7)}} className="text-white font-bold tracking-wider">Sign In</Text>
+                  <Text style={{fontSize: hp(2.7)}} className="text-white font-bold tracking-wider">Sign Up</Text>
                 </TouchableOpacity>
               )}
             </View>
             <View className="flex-row justify-center">
               <Text style={{fontSize: hp(1.8)}} className="font-semibold text-neutral-500">Already have an account ?</Text>
               <Pressable onPress={handleGoToSignIn}>
-                <Text style={{fontSize: hp(1.8)}} className="font-bold text-indigo-500">Sign Up</Text>
+                <Text style={{fontSize: hp(1.8)}} className="font-bold text-indigo-500">Sign In</Text>
               </Pressable>
             </View>
           </View>
